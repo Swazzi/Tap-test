@@ -9,7 +9,6 @@ namespace Tap_test
         private static Person person = new Person();
         private static Vehicle vehicle = new Vehicle();
         private static List<double> travelFareRate = new List<double>();
-        private static List<double> driverCost;
 
         public static void MainMenu()
         {
@@ -52,12 +51,12 @@ namespace Tap_test
             {
                 if (driverCost == null)
                 {
-                    Console.WriteLine("{0}:    {1}    |    {2}    |    {3}    |    {4}    |    {5}    |    {6}", i, person.Name, person.Surname, person.Email,
+                    Console.WriteLine("{0}:    {1}    |    {2}    |    {3}    |    {4}    |    {5}    |    {6}", i + 1, person.Name, person.Surname, person.Email,
                                                                                             listVehicle[i].VehicleType, listVehicle[i].BaseFarePrice, listVehicle[i].BaseFareDistance);
                 }
                 else
                 {
-                    Console.WriteLine("{0}:    {1}    |    {2}    |    {3}    |    {4}    |    {5}    |    {6}    |    {7}", i, listPerson[i].Name, listPerson[i].Surname, listPerson[i].Email,
+                    Console.WriteLine("{0}:    {1}    |    {2}    |    {3}    |    {4}    |    {5}    |    {6}    |    {7}", i + 1, listPerson[i].Name, listPerson[i].Surname, listPerson[i].Email,
                                                                                                 listVehicle[i].VehicleType, listVehicle[i].BaseFarePrice, listVehicle[i].BaseFareDistance, driverCost[i]);
                 }
                 i++;
@@ -109,8 +108,8 @@ namespace Tap_test
             person.Surname = Console.ReadLine();
             Console.WriteLine("Please add Email.");
             person.Email = Console.ReadLine();
-            Console.WriteLine("Please add Vehicle Type.");
-            vehicle.VehicleType = Console.ReadLine();
+            Console.WriteLine("Please add Vehicle Type for type 1 or type 2.");
+            vehicle.VehicleType = Convert.ToInt32(Console.ReadLine());
             Console.WriteLine("Please add Base Fare Price.");
             vehicle.BaseFarePrice = Convert.ToDouble(Console.ReadLine());
             Console.WriteLine("Please add Base Fare Distance.");
@@ -130,8 +129,8 @@ namespace Tap_test
             int selectedUser;
             Console.WriteLine("Please select the number of the Driver you want to update.");
             selectedUser = Convert.ToInt32(Console.ReadLine());
-            person.UpdatePerson(selectedUser, listPerson);
-            vehicle.UpdateVehicle(selectedUser, listVehicle);
+            person.UpdatePerson(selectedUser - 1, listPerson);
+            vehicle.UpdateVehicle(selectedUser - 1, listVehicle);
             ClearConsole();
             Console.WriteLine("Driver changed.");
             ShowDrivers();
@@ -144,8 +143,8 @@ namespace Tap_test
             int selectedUser;
             Console.WriteLine("Please select the number of the Driver you want to delete.");
             selectedUser = Convert.ToInt32(Console.ReadLine());
-            person.DeletePerson(selectedUser, listPerson);
-            vehicle.DeleteVehicle(selectedUser, listVehicle);
+            person.DeletePerson(selectedUser - 1, listPerson);
+            vehicle.DeleteVehicle(selectedUser - 1, listVehicle);
             ClearConsole();
             Console.WriteLine("Driver deleted.");
             ShowDrivers();

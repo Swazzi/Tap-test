@@ -6,11 +6,11 @@ namespace BLL
 {
     public class Vehicle : IVehicle
     {
-        private string vehicleType;
+        private int vehicleType;
         private double baseFarePrice;
         private double baseFareDistance;
 
-        public Vehicle(string vehicleType, double baseFarePrice, double baseFareDistance)
+        public Vehicle(int vehicleType, double baseFarePrice, double baseFareDistance)
         {
             this.vehicleType = vehicleType;
             this.baseFarePrice = baseFarePrice;
@@ -33,7 +33,7 @@ namespace BLL
             set { baseFarePrice = value; }
         }
 
-        public string VehicleType
+        public int VehicleType
         {
             get { return vehicleType; }
             set { vehicleType = value; }
@@ -49,7 +49,7 @@ namespace BLL
             foreach (var item in vehicle)
             {
                 string[] newVehicle = item.Split(",");
-                this.VehicleType = newVehicle[0];
+                this.VehicleType = Convert.ToInt32(newVehicle[0]);
                 this.BaseFarePrice = Convert.ToDouble(newVehicle[1]);
                 this.BaseFareDistance = Convert.ToDouble(newVehicle[2]);
 
@@ -70,7 +70,7 @@ namespace BLL
             TextEditor text = new TextEditor();
             Console.Clear();
             Console.WriteLine("Please enter new VehicleType.");
-            listVehicle[userID - 1].VehicleType = Console.ReadLine();
+            listVehicle[userID - 1].VehicleType = Convert.ToInt32(Console.ReadLine());
             Console.WriteLine("Please enter new BaseFarePrice.");
             listVehicle[userID - 1].BaseFarePrice = Convert.ToDouble(Console.ReadLine());
             Console.WriteLine("Please enter new BaseFareDistance.");
@@ -125,19 +125,31 @@ namespace BLL
         public List<double> CalculateTravelCost(List<Vehicle> listVehicle, List<double> rates)
         {
             List<double> newCost = new List<double>();
-            double newValue;
+            NormalFareStrategy normalFare = new NormalFareStrategy();
+            ExtraFareStrategy extraFare = new ExtraFareStrategy();
+            NewTaxiRateStrategy newRateCost = new NewTaxiRateStrategy();
+            OldTaxiRateStrategy oldRateCost = new OldTaxiRateStrategy();
+            double newValue = 0;
+
             foreach (var item in listVehicle)
             {
-                newValue = rates[0] - item.BaseFareDistance;
+                if (item.VehicleType == 1)
+                {
+                    newValue = newRateCost.GetRates(rates, item.BaseFareDistance);
+                }
+                else
+                {
+                    newValue = oldRateCost.GetRates(rates, item.BaseFareDistance);
+                }
                 if (newValue <= 0)
                 {
-                    newCost.Add((item.baseFarePrice + newValue));
+                    newCost.Add(normalFare.GetFarePrice(item.baseFarePrice, newValue));
                 }
                 else
                 {
                     newValue = newValue / rates[1];
                     newValue = (newValue * rates[2]);
-                    newCost.Add((item.baseFarePrice + newValue));
+                    newCost.Add(extraFare.GetFarePrice(item.baseFarePrice, newValue));
                 }
             }
 
